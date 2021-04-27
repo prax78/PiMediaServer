@@ -20,6 +20,9 @@
  
  ![alt text](https://github.com/prax78/PiMediaServer/blob/master/PI_server_kestrel.png)
  
+ *** Thank you for Songs https://audiotrimmer.com/royalty-free-music/ ***
+ *** Thank you for image files https://www.pexels.com/ ***
+ 
  
  
  
