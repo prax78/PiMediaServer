@@ -13,7 +13,7 @@
  
  Please make sure you have DotNet 5 installed on your Raspberry PI 4 B.
  Use this below command
- ****wget -O - https://raw.githubusercontent.com/pjgpetecodes/dotnet5pi/master/install.sh | sudo bash****
+ ****"wget -O - https://raw.githubusercontent.com/pjgpetecodes/dotnet5pi/master/install.sh | sudo bash"****
  this will get DOtNet 5 installed (https://github.com/pjgpetecodes/dotnet5pi).
  
  I have made server to listen on static IP of my PI on port 5005, you can do as per your needs.
