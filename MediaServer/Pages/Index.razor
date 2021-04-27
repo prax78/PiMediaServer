@@ -1,0 +1,123 @@
+﻿@page "/"
+
+@using MediaServer.Data
+
+@inject MediaServerService MediaService
+
+<div class="card w-auto bg-transparent">
+    <h1 class="h1" style="background-color:crimson"><img src="/images/rspberry.png" /><font style="font-family:'Comic Sans MS';font-size:medium;font-weight:800;font-palette:dark;color:whitesmoke"> PI MediaServer</font></h1>
+</div>
+
+<div class="card w-auto" style="background-image: url(/images/music1.png);align-content:center">
+    <div class="card-body"  >
+        <h5 class="card-title " style="align-content:center" ><text style="color:orangered;align-content:center"> Music Control Center </text></h5>
+        @if (songRunning)
+        {
+            songRunning = false;
+            <p class="card-text" ><text class="text-warning" style="font-display:auto">Currently Running Song: Other user initiated song, you can stop it!!</text></p>
+        }
+        else
+        {
+            <p class="card-text"><i class="fas fa-music"><text class="text-primary" style="font-display:auto"> Currently Running Song: @media.songName</text></i></p>
+        }
+        <a href="#" class="btn btn-outline-danger" @onclick="StopSongLeftPlaying"><i class="fas fa-stop-circle"> Stop Running Song</i></a>
+    </div>
+</div>
+<div class="content">
+    @if (pID == 4194304)
+    {
+
+        playButtonStatus = true;
+        <h6 class="content"> <strong><font class="alert-dark" style="font-size:large;color:red"><i class="fas fa-exclamation-triangle">@errorMessage</i></font></strong></h6>
+    }
+</div>
+
+
+
+
+
+@foreach (var file in GetConfig())
+{
+    <div class="card mb-auto bg-transparent" style="max-width:300px;max-height:300px">
+        
+            <div class="col-md-auto" style="background-image:url(/images/music5.png)">
+                
+                <div class="card-body" >
+                    <h5 class="card-title"><font style="color:whitesmoke">Song Name: @file.Name</font></h5>
+
+                    @if (playButtonStatus == true && pID != 4194304 )
+                    {
+
+
+                        <a href="#" class="btn btn-outline-success active" data-bs-toggle="button" autocomplete="off" aria-pressed="true" @onclick="(() => { pID = PlaySong(file.FullName, file.Name);   })"><i class="fas fa-play-circle"> Play </i></a>
+
+
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-outline-success" disabled data-bs-toggle="button" autocomplete="off"><i class="fas fa-play-circle">Play</i></button>
+                    }
+
+                </div>
+            </div>
+   
+    </div>
+    
+
+
+
+
+}
+
+
+
+
+
+@code
+{
+
+
+    bool playButtonStatus = true;
+    bool songRunning = false;
+
+    MediaServerService media = new MediaServerService();
+
+
+
+    string errorMessage = "Song in Progress, wait for it to end  or stop the song and then Refresh your page";
+
+    int pID = 0;
+
+    string[] configDetails = System.IO.File.ReadAllLines("config.ini");
+
+    private IEnumerable<System.IO.FileInfo> GetConfig()
+    {
+        return MediaService.GetSongFiles(configDetails[1]);
+
+    }
+
+    private int PlaySong(string songFile, string songName)
+    {
+        media.songName = songName;
+        return MediaService.PlaySong(songFile, songName, configDetails[9], configDetails[3], configDetails[7], configDetails[5]);
+    }
+
+
+    private void StopSongLeftPlaying()
+    {
+        MediaService.StopSongLoad(configDetails[9]);
+
+        playButtonStatus = true;
+
+    }
+
+    
+    protected override void OnInitialized()
+    {
+        var songRunningCheck = MediaService.CheckSongRunningLoadingPage(configDetails[9]);
+        if (songRunningCheck == 1)
+        {
+            songRunning = true;
+        }
+    }
+}
